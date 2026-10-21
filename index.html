@@ -49,7 +49,7 @@ label{font-size:13px;color:var(--mut);display:block}input[type=range]{width:100%
 </style></head><body>
 <div class="shelf" id="shelf"></div>
 <div class="rd" id="rd"><div id="pb"></div>
-<div class="top"><button id="bk">‹ Kệ</button><span id="tt"></span><em id="tl"></em></div>
+<div class="top"><button id="bk">‹ Kệ</button><span id="tt"></span></div>
 <div id="sc"><article id="ar"></article></div>
 <div class="bot"><button id="pv" class="nv" aria-label="Chương trước">‹</button><button id="bc">≡ Chương</button><button id="bs">Aa</button><button id="bm">☆</button><button id="nx" class="nv" aria-label="Chương sau">›</button></div></div>
 <div class="bd" id="bd"></div><div class="sh" id="sh"><div class="hd" id="hd"></div><div id="shc"></div></div>
@@ -86,12 +86,10 @@ a.innerHTML=`<small>Chương ${c+1}/${cur.c.length}</small><h3>${esc(ch[0])}</h3
 $('#tt').textContent=cur.t;$('#pv').style.opacity=c>0?1:.35;$('#nx').style.opacity=c<cur.c.length-1?1:.35;const k=cur.id+':'+c;$('#bm').textContent=S.mk[k]?'★':'☆';$('#bm').className=S.mk[k]?'on':'';
 const sc=$('#sc');requestAnimationFrame(()=>{sc.scrollTop=s*(sc.scrollHeight-sc.clientHeight);upd()})}
 function upd(){const sc=$('#sc'),m=sc.scrollHeight-sc.clientHeight,s=m>0?sc.scrollTop/m:1;$('#pb').style.width=s*100+'%';
-$('#tl').textContent='còn '+Math.max(1,Math.ceil(cur.c[ci][1].split(/\s+/).length*(1-s)/200))+' phút';S.pos[cur.id]={c:ci,s};sv()}
-function go(d){const n=ci+d;if(n<0||n>=cur.c.length){$('#tl').textContent=n<0?'Đầu truyện':'Hết truyện';return}render(n,0,1)}
+S.pos[cur.id]={c:ci,s};sv()}
+function go(d){const n=ci+d;if(n<0||n>=cur.c.length)returnrender(n,0,1)}
 $('#pv').onclick=()=>go(-1);$('#nx').onclick=()=>go(1);
-$('#sc').onscroll=upd;let x0;$('#sc').ontouchstart=e=>x0=e.touches[0].clientX;
-$('#sc').ontouchend=e=>{const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>70){window._sw=1;go(dx<0?1:-1)}};
-$('#sc').onclick=e=>{if(window._sw){window._sw=0;return}const r=e.clientX/innerWidth;r<.2?go(-1):r>.8?go(1):$('#rd').classList.toggle('hid')};
+$('#sc').onscroll=upd;$('#sc').onclick=e=>{const r=e.clientX/innerWidth;r<.2?go(-1):r>.8?go(1):$('#rd').classList.toggle('hid')};
 $('#bk').onclick=()=>{$('#rd').classList.remove('on');shut();shelf()};
 $('#bm').onclick=()=>{const k=cur.id+':'+ci;S.mk[k]?delete S.mk[k]:S.mk[k]=1;sv();$('#bm').textContent=S.mk[k]?'★':'☆';$('#bm').className=S.mk[k]?'on':''};
 addEventListener('keydown',e=>{if(!$('#rd').classList.contains('on')||$('#sh').classList.contains('on'))return;e.key=='ArrowRight'?go(1):e.key=='ArrowLeft'?go(-1):e.key=='Escape'&&$('#bk').click()});
