@@ -46,12 +46,13 @@ label{font-size:13px;color:var(--mut);display:block}input[type=range]{width:100%
 .ch{display:flex;width:100%;justify-content:space-between;padding:14px 4px;border-bottom:1px solid var(--card);text-align:left;font-size:15px}.ch.cur{color:var(--acc);font-weight:600}
 .hb{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.imp2{border:2px solid var(--acc);border-radius:12px;padding:8px 14px;font-size:14px;font-weight:600;white-space:nowrap}
 .bot .nv{flex:0 0 58px;font-size:32px;line-height:1}
+.bot svg{display:block;margin:0 auto}.hr2{display:flex;flex-direction:column;align-items:flex-end;gap:8px}.ic2{display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:12px;padding:8px 14px}
 </style></head><body>
 <div class="shelf" id="shelf"></div>
 <div class="rd" id="rd"><div id="pb"></div>
-<div class="top"><button id="bk">‹ Kệ</button><span id="tt"></span></div>
+<div class="top"><span id="tt"></span></div>
 <div id="sc"><article id="ar"></article></div>
-<div class="bot"><button id="pv" class="nv" aria-label="Chương trước">‹</button><button id="bc">≡ Chương</button><button id="bs">Aa</button><button id="bm">☆</button><button id="nx" class="nv" aria-label="Chương sau">›</button></div></div>
+<div class="bot"><button id="pv" class="nv" aria-label="Chương trước">‹</button><button id="bk" aria-label="Về kệ sách"><svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor" aria-hidden="true"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3L12 3z"/></svg></button><button id="bc" aria-label="Danh sách chương"><svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M3 6h18v2.4H3zM3 10.8h18v2.4H3zM3 15.6h18v2.4H3z"/></svg></button><button id="bs">Aa</button><button id="bm">☆</button><button id="nx" class="nv" aria-label="Chương sau">›</button></div></div>
 <div class="bd" id="bd"></div><div class="sh" id="sh"><div class="hd" id="hd"></div><div id="shc"></div></div>
 <input type="file" id="fi" accept=".json,application/json" hidden>
 <script>
@@ -70,10 +71,11 @@ const m=document.querySelector('meta[name=theme-color]')||document.head.appendCh
 function cover(b){const p=Math.round(prog(b)*100),C=87.96,im=b.img?`;background-image:linear-gradient(transparent 40%,rgba(0,0,0,.78)),url(${b.img})`:'';
 return `<button class="cv" data-id="${b.id}" style="--h:${b.h||200}${im}"><svg class="ring" viewBox="0 0 36 36"><circle cx="18" cy="18" r="14" fill="rgba(0,0,0,.35)" stroke="rgba(255,255,255,.3)" stroke-width="3"/><circle cx="18" cy="18" r="14" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-dasharray="${C*p/100} ${C}" transform="rotate(-90 18 18)"/><text x="18" y="21" text-anchor="middle">${p}%</text></svg><b>${esc(b.t)}</b><i>${esc(b.a||'')}</i></button>`}
 function shelf(){const l=S.last&&bk(S.last.id),p=l&&S.pos[l.id];
-$('#shelf').innerHTML=`<div class="hd2"><div><h1>Thư viện của tôi</h1><p class="sub">${L.books.length} truyện</p></div><div class="hb">${(opener||location.protocol=='file:')?'<button class="imp2" id="ad">← Quản lý</button>':''}<button class="imp" id="im">Nhập truyện</button></div></div>`+
+$('#shelf').innerHTML=`<div class="hd2"><div><h1>Thư viện của tôi</h1><p class="sub">${L.books.length} truyện</p></div><div class="hr2"><div class="hb">${(opener||location.protocol=='file:')?'<button class="imp2" id="ad">← Quản lý</button>':''}<button class="imp" id="im">Nhập truyện</button></div><button class="ic2" id="th" aria-label="Đổi nền sáng hoặc tối" title="Đổi nền sáng hoặc tối"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></div>`+
 (L.books.length?((l&&p?`<h2>Đang đọc dở</h2><button class="cont" data-id="${l.id}"><div class="cv" style="--h:${l.h||200}${l.img?`;background-image:url(${l.img})`:''}"></div><div><p>Chương ${Math.min(p.c+1,l.c.length)}/${l.c.length}</p><b>${esc(l.t)}</b><p>${esc((l.c[Math.min(p.c,l.c.length-1)]||[''])[0])}</p></div></button>`:'')+`<h2>Tất cả truyện</h2><div class="grid">${L.books.map(cover).join('')}</div>`)
 :'<div class="empty"><p>Chưa có truyện nào trong thư viện.</p><p>Bấm Nhập truyện rồi chọn file truyen.json từ trang quản lý. Truyện sẽ được lưu ngay trong máy này.</p></div>');
 $('#im').onclick=()=>$('#fi').click();
+$('#th').onclick=()=>{const dk=S.set.theme?S.set.theme=='dark':matchMedia('(prefers-color-scheme:dark)').matches;S.set.theme=dk?'light':'dark';apply();sv()};
 if($('#ad'))$('#ad').onclick=()=>{try{if(opener&&!opener.closed){opener.focus();window.close();setTimeout(()=>alert('Hãy chuyển về tab quản lý (tab trước đó) để chỉnh sửa truyện.'),300);return}}catch(e){}location.href='quan-ly.html'};
 document.querySelectorAll('[data-id]').forEach(e=>e.onclick=()=>{const id=e.dataset.id,p=S.pos[id]||{c:0,s:0};open(id,p.c,p.s)})}
 function setLib(o){L=o;kv.set('lib',o);Object.keys(S.pos).forEach(k=>{if(!bk(k))delete S.pos[k]});sv();shelf()}
